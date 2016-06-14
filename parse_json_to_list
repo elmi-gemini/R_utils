@@ -1,6 +1,6 @@
 
-old_colnames <- colnames(all_data)
-new_colnames <- gsub('^.+[.]', '', old_colnames)
+#old_colnames <- colnames(all_data)
+#new_colnames <- gsub('^.+[.]', '', old_colnames)
 
 colnames(all_data) <- new_colnames
 
