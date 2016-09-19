@@ -1,0 +1,17 @@
+
+# to export a pdf from R shell
+
+
+library(ggplot2)
+
+pdf("barplot1.pdf",height=5.5, width=7)
+qplot(group_sva_des, data=se, geom="bar")
+dev.off()
+
+
+#another alternative:
+
+pdf("blah.pdf")
+
+
+
