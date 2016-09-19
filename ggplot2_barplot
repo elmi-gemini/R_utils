@@ -13,5 +13,10 @@ dev.off()
 
 pdf("blah.pdf")
 
+g <- ggplot(serv, aes(group_sva_des)) + geom_bar(fill="light blue")
+g  + theme(axis.text.x = element_text(angle = 90, hjust=1))
+
+dev.off()
+
 
 
