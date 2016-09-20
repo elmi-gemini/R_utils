@@ -9,6 +9,7 @@ qplot(group_sva_des, data=se, geom="bar")
 dev.off()
 
 
+
 #another alternative:
 
 pdf("blah.pdf")
@@ -17,6 +18,71 @@ g <- ggplot(serv, aes(group_sva_des)) + geom_bar(fill="light blue")
 g  + theme(axis.text.x = element_text(angle = 90, hjust=1))
 
 dev.off()
+
+
+
+------------------------------------------------------------
+
+serv <- read.table('sample.csv', sep="\t", header=TRUE)
+serv[1:15, ]
+summary(serv)
+
+colnames(serv) <- gsub('sample_services.', '', colnames(serv)) 
+#deleting the long table name
+
+------------------------------------------------------------
+
+
+library(ggplot2)
+
+#pdf("ggplot1.pdf") # to use in an R shell without graphic interface
+
+g <- ggplot(serv, aes(group_sva_des)) + geom_bar(fill="light blue")
+g  + theme(axis.text.x = element_text(angle = 90, hjust=1))
+#dev.off()            
+
+
+# summarization tools:
+
+library(plyr)
+class(serv$service_activ_dt) # factor class was at first
+serv$service_activ_dt <- as.Date(as.character(serv$service_activ_dt))
+  
+ddply(serv, "group_sva_des",summarize, max_date = max(service_activ_dt), min_date = min(service_activ_dt))
+
+     
+#OTRO TIPO DE GGPLOT, con los valores previamente calculados:
+
+gr <- sort(table(serv$group_sva_des), decreasing=TRUE)
+class(gr)
+as.matrix(gr, ncols=2)
+gr <- as.data.frame(table(serv$group_sva_des))
+gr
+colnames(gr) <- c("product_group", "nr_msisdn")
+#ordenamos dataframe por numero de msisdns en el orden decreciente:
+gr <- gr[with(gr, order(-nr_msisdn)), ]
+
+library(ggplot2)
+
+#pdf("ggplot1.pdf") 
+a <- ggplot(gr, aes(y=nr_msisdn, x=product_group)) + geom_bar(stat = "identity", fill="red")
+a  + theme(axis.text.x = element_text(angle = 90, hjust=1))
+#dev.off()   
+# NB! It didn't help, ggplot reordes a x variable in an alphabetic order because it's natural for factor variables.
+
+# Force re-order by variable product_group:
+gr$product_group2 <- reorder(gr$product_group, gr$nr_msisdn)
+
+
+rr <- ggplot(gr, aes(y=nr_msisdn)) + opts(axis.text.x=theme_text(angle=90, hjust=1))
+
+  rr + geom_bar(aes(x=product_group2), data= gr, stat = "identity", fill="red") 
+     + opts(title = "Número de líneas por el producto")
+
+
+
+
+            
 
 
 
